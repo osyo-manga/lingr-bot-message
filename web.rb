@@ -6,6 +6,8 @@ load "last_post.rb"
 
 
 help = <<"EOS"
+lingr の履歴とかを保存しておく bot です
+アプリをリスタートするたびに履歴は消えてしまうのであしからず
 "#lastpost [{nickname}]"   : 最後に {nickname} が発言したリンクを出力 引数がなければ自分を参照する
 "#message help" : 使い方を出力
 EOS
