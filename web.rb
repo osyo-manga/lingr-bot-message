@@ -5,6 +5,12 @@ require 'json'
 load "last_post.rb"
 
 
+help = <<"EOS"
+"#lastpost"   : 最後に自分が発言したリンクを出力
+"#message help" : 使い方を出力
+EOS
+
+
 def to_lingr_link(message)
 	time = message["timestamp"].match(/(.*)T/).to_a[1].gsub(/-/, '/')
 	return "http://lingr.com/room/#{message["room"]}/archives/#{time}/#message-#{message["id"]}"
@@ -32,7 +38,7 @@ post '/lingr_bot' do
 		text = e["message"]["text"]
 
 		if /^#lastpost$/ =~ text
-			return last_post.get(room, name)
+			return last_post.get(room, name, "Not Found")
 		end
 
 		last_post.add(room, name, to_lingr_link(e["message"]))

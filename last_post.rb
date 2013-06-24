@@ -11,8 +11,8 @@ class LastPost
 		@cache[room][name] = text
 	end
 
-	def get(room, name)
-		@cache.fetch(room, {}).fetch(name, "")
+	def get(room, name, default="")
+		@cache.fetch(room, {}).fetch(name, default)
 	end
 end
 
