@@ -46,10 +46,10 @@ post '/lingr_bot' do
 		when "#lastpost"
 			name = command.fetch(1, e["message"]["nickname"])
 			return last_post.get(room, name, "Not Found")
-		else
-			name = e["message"]["nickname"]
-			last_post.add(room, name, to_lingr_link(e["message"]))
 		end
+
+		name = e["message"]["nickname"]
+		last_post.add(room, name, to_lingr_link(e["message"]))
 	}
 	return ""
 end
