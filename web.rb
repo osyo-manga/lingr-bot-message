@@ -67,8 +67,8 @@ post '/lingr_bot' do
 			name = text[/^[\s　]*@(.*)[\s　]+[^\s　]+/, 1]
 			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
 		end
-		if /^[\s　]*(.+)[:：].+/ =~ text
-			name = text[/^[\s　]*(.+)[:：].+/, 1]
+		if /^[\s　]*([^\s　]+)[\s　]*[:：].+/ =~ text
+			name = text[/^[\s　]*([^\s　]+)[\s　]*[:：].+/, 1]
 			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
 		end
 
