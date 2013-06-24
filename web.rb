@@ -38,8 +38,11 @@ post '/lingr_bot' do
 		command = text.split(/[\s　]+/)
 		
 		case command[0]
-		when "#help"
-			return help
+		when "#message"
+			case command.fetch(1, "")
+			when "help"
+				return help
+			end
 		when "#lastpost"
 			name = command.fetch(1, e["message"]["nickname"])
 			return last_post.get(room, name, "Not Found")
