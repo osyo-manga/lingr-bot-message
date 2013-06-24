@@ -11,6 +11,7 @@ lingr の履歴とかを保存しておく bot です
 アプリをリスタートするたびに履歴は消えてしまうのであしからず
 "#lastpost [{nickname}]"   : 最後に {nickname} が発言したリンクを出力 引数がなければ自分を参照する
 "#mention [{nickname}]"   : @{nickname} or {nickname}: されたポストの一覧を出力 この値は #mention した時にリセットされる
+"#mention! [{nickname}]"   : #mention と同等　ただし、値はリセットされない
 "#message help" : 使い方を出力
 EOS
 
@@ -58,6 +59,10 @@ post '/lingr_bot' do
 			name = command.fetch(1, e["message"]["nickname"])
 			puts name
 			return mention.pop(room, name, ["Not Found"]).join("\n")
+		when "#mention!"
+			name = command.fetch(1, e["message"]["nickname"])
+			puts name
+			return mention.get(room, name, ["Not Found"]).join("\n")
 		end
 
 		name = e["message"]["nickname"]
