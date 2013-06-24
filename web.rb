@@ -6,7 +6,7 @@ load "last_post.rb"
 
 
 help = <<"EOS"
-"#lastpost"   : 最後に自分が発言したリンクを出力
+"#lastpost [{nickname}]"   : 最後に {nickname} が発言したリンクを出力 引数がなければ自分を参照する
 "#message help" : 使い方を出力
 EOS
 
@@ -33,15 +33,20 @@ post '/lingr_bot' do
 	content_type :text
 	json = JSON.parse(request.body.string)
 	json["events"].select {|e| e['message'] }.map {|e|
-		name = e["message"]["nickname"]
 		room = e["message"]["room"]
 		text = e["message"]["text"]
-
-		if /^#lastpost$/ =~ text
+		command = text.split(/[\s　]+/)
+		
+		case command[0]
+		when "#help"
+			return help
+		when "#lastpost"
+			name = command.fetch(1, e["message"]["nickname"])
 			return last_post.get(room, name, "Not Found")
+		else
+			name = e["message"]["nickname"]
+			last_post.add(room, name, to_lingr_link(e["message"]))
 		end
-
-		last_post.add(room, name, to_lingr_link(e["message"]))
 	}
 	return ""
 end
