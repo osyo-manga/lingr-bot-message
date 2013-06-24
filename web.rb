@@ -3,12 +3,14 @@ require 'sinatra'
 require 'json'
 
 load "last_post.rb"
+load "mention.rb"
 
 
 help = <<"EOS"
 lingr の履歴とかを保存しておく bot です
 アプリをリスタートするたびに履歴は消えてしまうのであしからず
 "#lastpost [{nickname}]"   : 最後に {nickname} が発言したリンクを出力 引数がなければ自分を参照する
+"#mention [{nickname}]"   : @{nickname} or {nickname}: されたポストの一覧を出力 この値は #mention した時にリセットされる
 "#message help" : 使い方を出力
 EOS
 
@@ -25,10 +27,14 @@ get '/' do
 end
 
 last_post = LastPost.new
-
+mention = Mention.new 10
 
 get '/lingr_bot' do
 	"lingr bot"
+end
+
+get '/lingr_bot/mention' do
+	
 end
 
 post '/lingr_bot' do
@@ -48,10 +54,24 @@ post '/lingr_bot' do
 		when "#lastpost"
 			name = command.fetch(1, e["message"]["nickname"])
 			return last_post.get(room, name, "Not Found")
+		when "#mention"
+			name = command.fetch(1, e["message"]["nickname"])
+			puts name
+			return mention.pop(room, name, ["Not Found"]).join("\n")
 		end
 
 		name = e["message"]["nickname"]
 		last_post.add(room, name, to_lingr_link(e["message"]))
+
+		if /^[\s　]*@(.*)[\s　]+[^\s　]+/ =~ text
+			name = text[/^[\s　]*@(.*)[\s　]+[^\s　]+/, 1]
+			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
+		end
+		if /^[\s　]*(.+)[:：][^\s　]+/ =~ text
+			name = text[/^[\s　]*(.+)[:：][^\s　]+/, 1]
+			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
+		end
+
 	}
 	return ""
 end
