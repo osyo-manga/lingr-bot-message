@@ -19,7 +19,6 @@ EOS
 def to_lingr_link(message)
 	time = message["timestamp"].match(/(.*)T/).to_a[1].gsub(/-/, '/')
 	return "http://lingr.com/room/#{message["room"]}/archives/#{time}/#message-#{message["id"]}"
-	10
 end
 
 
@@ -28,7 +27,7 @@ get '/' do
 end
 
 last_post = LastPost.new
-mention = Mention.new 10
+mention = Mention.new 5
 
 get '/lingr_bot' do
 	"lingr bot"
@@ -70,13 +69,12 @@ post '/lingr_bot' do
 
 		if /^[\s　]*@(.*)[\s　]+[^\s　]+/ =~ text
 			name = text[/^[\s　]*@(.*)[\s　]+[^\s　]+/, 1]
-			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
+			mention.add(room, name, e["message"]["nickname"] + " > " + text + "\n" + to_lingr_link(e["message"]))
 		end
 		if /^[\s　]*([^\s　]+)[\s　]*[:：].+/ =~ text
 			name = text[/^[\s　]*([^\s　]+)[\s　]*[:：].+/, 1]
-			mention.add(room, name, text + "\n" + to_lingr_link(e["message"]))
+			mention.add(room, name, e["message"]["nickname"] + " > " + text + "\n" + to_lingr_link(e["message"]))
 		end
-
 	}
 	return ""
 end
