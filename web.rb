@@ -64,7 +64,7 @@ post '/lingr_bot' do
 			return mention.get(room, name, ["Not Found"]).join("\n")
 		end
 		if /^#fingr[\s　]+(.+)/ =~ text
-			return lastpost.exists?(text[/^#fingr[\s　]*(.+)/, 1], room) ? "みつかりました" : "そんなのいないよ"
+			return last_post.exists?(text[/^#fingr[\s　]*(.+)/, 1], room) ? "みつかりました" : "そんなのいないよ"
 		end
 
 		name = e["message"]["nickname"]
