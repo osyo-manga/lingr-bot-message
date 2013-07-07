@@ -52,7 +52,7 @@ post '/lingr_bot' do
 				return help
 			end
 		when "#lastpost"
-			name = command.fetch(1, e["message"]["nickname"])
+			name = command.fetch(1, e["message"]["speaker_id"])
 			return last_post.get(room, name, "Not Found")
 		when "#mention"
 			name = command.fetch(1, e["message"]["nickname"])
@@ -68,9 +68,9 @@ post '/lingr_bot' do
 			return last_post.exists?(name, room) ? "#{name} さんがみつかりました" : "#{name} さんはいませんでした"
 		end
 
-		name = e["message"]["nickname"]
-		last_post.add(room, name, to_lingr_link(e["message"]))
+		last_post.add(room, e["message"]["speaker_id"], to_lingr_link(e["message"]))
 
+		name = e["message"]["nickname"]
 		if /^[\s　]*@(.*)[\s　]+[^\s　]+/ =~ text
 			name = text[/^[\s　]*@(.*)[\s　]+[^\s　]+/, 1]
 			mention.add(room, name, e["message"]["nickname"] + " > " + text + "\n" + to_lingr_link(e["message"]))
