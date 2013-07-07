@@ -33,5 +33,18 @@ class LastPost
 		end
 		result
 	end
+
+	def exists?(name, room = "")
+		begin
+			if room.empty?
+				LastPostData.first(:name => name).text
+			else
+				LastPostData.first(:room => room, :name => name).text
+			end
+			return true
+		rescue
+			return false
+		end
+	end
 end
 
